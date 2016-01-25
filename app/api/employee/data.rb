@@ -1,25 +1,26 @@
 module Employee
 	class Data < Grape::API
 
+# Below is how we Structure Routes
+# API Archtecture
+# -> Rules Similar to RESTful
+# ?-> ...but for more custom-routing?
 #==================================>
 		resource :employee_data do
 			desc "List all Employee"
-			
-
-
-			# - - - - - 
 			get do
 				EmpDatum.all
 			end
-			# - - - - - 
+# CREATE Employee
+#-------------------------------------------->
 			desc "create a new employee"
-	## This takes care of parameter validation
+			# Parameter Validation
 			params do
 		  	requires :name, type: String
 		  	requires :address, type:String
 		  	requires :age, type:Integer
 			end
-		## This takes care of creating employee
+			# actually Creating Employee Route w/ params
 			post do
 		  EmpDatum.create!({
 		    name:params[:name],
@@ -27,31 +28,31 @@ module Employee
 		    age:params[:age]
 		  })
 			end
-
-
-
+#-------------------------------------------->
+# DELETE Employee
+			desc "delete an employee"
+			params do
+				requires :id, type:String
+			end
+			delete ':id' do
+				EmpDatum.find(params[:id]).destroy!
+			end
+#-------------------------------------------->
+# UPDATE Employee
+		desc "update an employee address"
+		params do
+			requires :id, type:String
+			requires :address, type:String
 		end
-#==================================>
-		# desc "create a new employee"
+		put ':id' do
+			EmpDatum.find(params[:id]).update({
+				address:params[:address]
+				})
+		end
 
-		# ## this takes care of parameter validations
-		# params do
-		# 	requires :name, type: String
-		# 	requires :address, type: String
-		# 	requires :age, type: Intenger
-		# end
 
-		# ## this takes care of creating an employee
-		# post do
-		# 	EmpData.create!({
-		# 		name:params[:name],
-		# 		address:params[:address],
-		# 		age:params[:age]
-		# 		})
-		# end
-#==================================>
-		
-
+#-------------------------------------------->
+		end
 
 	end	
 end
